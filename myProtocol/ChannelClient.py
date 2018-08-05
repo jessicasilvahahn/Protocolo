@@ -30,7 +30,7 @@ loop = asyncio.get_event_loop()
 message = "Hello World!"
 connect = loop.create_datagram_endpoint(
     lambda: ChannelClient(message, loop),
-    remote_addr=('127.0.0.1', 9999))
+    remote_addr=('127.0.0.1', 3400))
 transport, protocol = loop.run_until_complete(connect)
 loop.run_forever()
 transport.close()

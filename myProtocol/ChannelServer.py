@@ -14,7 +14,7 @@ loop = asyncio.get_event_loop()
 print("Starting UDP server")
 # One protocol instance will be created to serve all client requests
 listen = loop.create_datagram_endpoint(
-    ChannelServer, local_addr=('127.0.0.1', 9999))
+    ChannelServer, local_addr=('127.0.0.1', 3400))
 transport, protocol = loop.run_until_complete(listen)
 
 try:
