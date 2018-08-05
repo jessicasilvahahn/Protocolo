@@ -1,21 +1,22 @@
-import socket
+from myProtocol import channelComunication
 
-HOST = ''  # Endereco IP do Servidor
-PORT = 3400            # Porta que o Servidor esta
-udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-dest = (HOST, PORT)
 msg = "/home/jessica/Documentos/teste/teste.txt"
 fileNameClient = "/home/jessica/Documentos/teste2.txt"
-udp.sendto(msg.encode(), dest)
-serverMsg,addrServer = udp.recvfrom(512)
+HOST = ''
+PORT = 3400
+dest = (HOST,PORT)
+channel = channelComunication.iniciaConexao()
+channelComunication.enviaMsg(dest,channel,msg)
+serverMsg, addrServer = channelComunication.recebeMsg(channel)
 fileClient = open(fileNameClient, 'w')
-while(serverMsg.decode()!="finish"):
-    print("Recebido de:",serverMsg,addrServer)
+while (serverMsg.decode() != "finish"):
+    print("Recebido de:", serverMsg, addrServer)
     print("Sending to File\n")
     fileClient.write(serverMsg.decode('utf-8'))
-    serverMsg, addrServer = udp.recvfrom(512)
+    serverMsg, addrServer = channelComunication.recebeMsg(channel)
 fileClient.close()
 print("Arquivo Transferido\n")
-udp.close()
+channelComunication.finalizaConexao(channel)
+
 
 

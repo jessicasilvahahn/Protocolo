@@ -1,20 +1,21 @@
-import socket
-import sys
+from myProtocol import channelComunication
+
 HOST = ''              # Endereco IP do Servidor
 PORT = 3400            # Porta que o Servidor esta
-udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+channel = channelComunication.iniciaConexao()
 orig = (HOST, PORT)
-udp.bind(orig)
+channelComunication.bindServer(channel,orig)
 while True:
-    fileName, cliente = udp.recvfrom(512)
+    fileName, cliente = channelComunication.recebeMsg(channel)
+    fileServer = open(fileName, 'r')
     print(cliente, fileName)
-    fileServer = open(fileName,'r')
     data = fileServer.read(512)
     while(data):
         print(data,"\n")
-        if(udp.sendto(data.encode(),(cliente[0],cliente[1]))):
-                print("Sending\n")
-                data = fileServer.read(512)
+        dest = (cliente[0],cliente[1])
+        if(channelComunication.enviaMsg(dest,channel,data)):
+            print("Sending\n")
+            data = fileServer.read(512)
     print("Enviando finish")
-    udp.sendto("finish".encode(), (cliente[0], cliente[1]))
+    channelComunication.enviaMsg(dest,channel,"finish")
     fileServer.close()
