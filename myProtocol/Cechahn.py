@@ -1,11 +1,9 @@
-#canal de comunicacao via socket udp
-from myProtocol import channelComunication
 
 #CONSTRUÇÃO DAS MENSAGENS
 def CONNECT():
     opcode = 1
     opByte = opcode.to_bytes(1,'big')
-    mensagem = "Tentando estabelecer conexão"
+    mensagem = "Estou ouvindo"
     msgBytes = bytes(mensagem,'utf-8')
     msgConnect = opByte + msgBytes
     return msgConnect
@@ -34,11 +32,12 @@ def ACK(numeroSeq):
     msgACK = opByte + bnumSeq
     return msgACK
 
-def ERROR(numErro):
+def ERROR():
     opcode = 6
     opByte = opcode.to_bytes(1, 'big')
-    bnumErro = bytes(bin(numErro), 'utf-8')
-    msgErro = opByte + bnumErro
+    mensagemErro = "Acesso negado ou Arquivo não encontrado"
+    bErro = bytes(mensagemErro, 'utf-8')
+    msgErro = opByte + bErro
     return msgErro
 
 def FINISH():
@@ -56,7 +55,7 @@ def splitMsg(msgBytes):
     opcode = vetorMsg[0]
     print(opcode)
     msg = bytearray(vetorMsg[1:len(vetorMsg)])
-    return str(msg,'utf-8')
+    return opcode,str(msg,'utf-8')
 
 def splitMsgDelimitadorGET(msgBytes):
     print(msgBytes)
@@ -74,6 +73,7 @@ def splitMsgDelimitadorGET(msgBytes):
     stringOrigem = str(bytearray(origem),'utf-8')
     stringDestino = str(bytearray(destino),'utf-8')
     return opcode,stringOrigem,stringDestino
+
 
 #testando
 #msg = CONNECT()

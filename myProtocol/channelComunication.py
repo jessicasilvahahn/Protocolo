@@ -12,8 +12,8 @@ def enviaMsg(dest,channel,msg):
 
 def recebeMsg(channel):
     print ("Recebendo Mensagem\n")
-    msgServer,addr = channel.recvfrom(512)
-    return msgServer,addr
+    msg,addr = channel.recvfrom(512)
+    return msg,addr
 
 def finalizaConexao(channel):
     print ("Finalizando Conexão\n")
