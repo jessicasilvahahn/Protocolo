@@ -30,6 +30,7 @@ def ACK(numeroSeq):
     opByte = opcode.to_bytes(1,'big')
     bnumSeq = bytes(bin(numeroSeq),'utf-8')
     msgACK = opByte + bnumSeq
+    print("montando ack",msgACK)
     return msgACK
 
 def ERROR():
@@ -49,7 +50,6 @@ def FINISH():
     return msgFinish
 
 def splitMsg(msgBytes):
-    print(msgBytes)
     vetorMsg = list(msgBytes)
     print(vetorMsg)
     opcode = vetorMsg[0]
@@ -58,18 +58,12 @@ def splitMsg(msgBytes):
     return opcode,str(msg,'utf-8')
 
 def splitMsgDelimitadorGET(msgBytes):
-    print(msgBytes)
     vetorMsg = list(msgBytes)
-    print(vetorMsg)
     opcode = vetorMsg[0]
-    print(opcode)
     stringMsg = str(msgBytes,'utf-8')
     delimitador =  stringMsg.find("\x00")
-    print("pos",delimitador)
     origem = vetorMsg[1:delimitador]
-    print(str(bytearray(origem),'utf-8'))
     destino = vetorMsg[delimitador+1:len(vetorMsg)]
-    print(str(bytearray(destino),'utf-8'))
     stringOrigem = str(bytearray(origem),'utf-8')
     stringDestino = str(bytearray(destino),'utf-8')
     return opcode,stringOrigem,stringDestino

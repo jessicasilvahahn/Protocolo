@@ -8,7 +8,7 @@ def iniciaConexao():
 def enviaMsg(dest,channel,msg):
     print ("Enviando Mensagem\n")
     #sendto return the number of bytes sent
-    return channel.sendto(msg.encode(),dest)
+    return channel.sendto(msg,dest)
 
 def recebeMsg(channel):
     print ("Recebendo Mensagem\n")
