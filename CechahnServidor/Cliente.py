@@ -43,28 +43,32 @@ def FSMCliente(estado, canalUdp,dest):
             estado = 5
     if (estado == 4):
         print('ESPERA_DADOS')
+        fileClient = open(fileDestino, 'w+')
         msgBytes, addr = channelComunication.recebeMsg(canalUdp)
-        print("BYTES", msgBytes, "\n")
-        opcode,numSeq, data = Cechahn.splitMsgDelimitador(msgBytes)  # Mexer na logica pra retornar numSeq
+        opcode,data, numSeq = Cechahn.splitMsgSeq(msgBytes)  # Mexer na logica pra retornar numSeq
+        numSeqAtual = numSeq
         dest = (addr[0],addr[1])
         # pegar opcode da mensagem e comparar, while opcode da mensagem for diferente do opcode FINISH(), escreve no arquivo
          # 7 é o opcode do FINISH e 6 do ERROR
         if (opcode == 3):  # opcode de DATA
             while opcode!=7:
-                print("Enviando ...", numSeq, "\n")
-                print("DATA",numSeq,"\n")
-                fileClient = open(fileDestino, 'w')
-                fileClient.write(numSeq)
+                numSeqAnterior = numSeqAtual
+
+                print("Enviando ...", data, "\n")
+                print("DATA", data, "\n")
+                fileClient.write(data)
+
                 #manda ack
                 #opcode, data, numSeq = Cechahn.splitMsgDelimitador(data)  # numSeq mexer na funcao de slipt pra retornar
-                print("numero seq",data,"\n")
-                msgAck = Cechahn.ACK_DATA(data)
+                print("numero seq",numSeq,"\n")
+                msgAck = Cechahn.ACK_DATA(numSeq)
                 channelComunication.enviaMsg(dest, canalUdp, msgAck)
                 msgBytes, addr = channelComunication.recebeMsg(canalUdp)
                 print("BYTES", msgBytes, "\n")
-                opcode, data, numSeq = Cechahn.splitMsgDelimitador(msgBytes)  # Mexer na logica pra retornar numSeq
+                opcode, data, numSeq = Cechahn.splitMsgSeq(msgBytes)  # Mexer na logica pra retornar numSeq
+                numSeqAtual = numSeq
                 dest = (addr[0], addr[1])
-                print("numero seq", data, "\n")
+                print("opcode", opcode, "\n")
                 msgAck = Cechahn.ACK_DATA(data)
                 channelComunication.enviaMsg(dest, canalUdp, msgAck)
                 # Implementar logica do timerout se buffer !=0, enviar o ultimo ACK'

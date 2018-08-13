@@ -81,8 +81,6 @@ def FSMServer(estadoIncial,canal):
                     print("numero sequencial",seq)
                     if isAck == 5:
                         binario = bin(ackAnterior)
-                        #ackAnteriorBytes = bytes(binario,'utf-8')
-                        #print("AckAnterior (bytes):",ackAnteriorBytes,"Ack Recebido (bytes):",seq)
                         if binario==seq:
                             print("proximo bloco\n")
                             ackAtual = ackAtual + 1
@@ -90,7 +88,7 @@ def FSMServer(estadoIncial,canal):
                             data = File.read(512)
                         else:
                             print("RETRANSMISSÃO\n")
-                            channelComunication.enviaMsg(dest, canalUdp, dataSend)
+                            #channelComunication.enviaMsg(dest, canalUdp, dataSend)
 
 
             estado = 5
