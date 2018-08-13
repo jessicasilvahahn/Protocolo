@@ -15,12 +15,14 @@ def GET(fileOrigem,fileDestino):
     return msgGet
 
 def DATA(data, numSeq):
+    print("num enviado",numSeq)
     opcode = 3
     opByte = opcode.to_bytes(1,'big')
     bnum = bin(numSeq)
     separador = 0
     dataBytes = bytes(data, 'utf-8')
-    msgData = opByte + dataBytes + separador.to_bytes(1,'big') + bytes(bnum,'utf-8')
+    msgData = opByte + bytes(bnum,'utf-8') + separador.to_bytes(1,'big') + dataBytes
+
     return msgData
 
 def ACK_GET(fileSize):
@@ -32,8 +34,8 @@ def ACK_GET(fileSize):
 def ACK_DATA(numeroSeq):
     opcode = 5
     opByte = opcode.to_bytes(1,'big')
-    bnumSeq = bytes(bin(numeroSeq),'utf-8')
-    msgACK = opByte + bnumSeq
+    #bnumSeq = bytes(bin(numeroSeq),'utf-8')
+    msgACK = opByte + bytes(numeroSeq,'utf-8')
     print("montando ack",msgACK)
     return msgACK
 
@@ -79,3 +81,4 @@ def splitMsgDelimitador(msgBytes):
     stringOrigem = str(bytearray(origem),'utf-8')
     stringDestino = str(bytearray(destino),'utf-8')
     return opcode,stringOrigem,stringDestino
+

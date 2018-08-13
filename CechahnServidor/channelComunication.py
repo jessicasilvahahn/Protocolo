@@ -22,3 +22,4 @@ def finalizaConexao(channel):
 def bindServer(channel,orig):
     print("Binding")
     channel.bind(orig)
+

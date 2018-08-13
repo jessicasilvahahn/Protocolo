@@ -64,13 +64,19 @@ def FSMServer(estadoIncial,canal):
         if estado != 8:
             ackAtual = 1
             data = File.read(512)
+            print("data lido:",data,"\n")
             while(data):
                 ackAnterior = ackAtual
                 print("Dado a ser enviado:",data)
                 #criar pacote data
                 dataSend = Cechahn.DATA(data,ackAtual)
+                print("Data SEND:",dataSend,"\n")
+                print("destino",dest)
                 if (channelComunication.enviaMsg(dest, canalUdp, dataSend)):
                     msg, cliente = channelComunication.recebeMsg(canalUdp)
+                    dest = (cliente[0],cliente[1])
+                    print("cliente envou",msg)
+                    print("ack")
                     isAck, seq = Cechahn.splitMsg(msg)
                     print("numero sequencial",seq)
                     if isAck == 5:
@@ -78,14 +84,16 @@ def FSMServer(estadoIncial,canal):
                         #ackAnteriorBytes = bytes(binario,'utf-8')
                         #print("AckAnterior (bytes):",ackAnteriorBytes,"Ack Recebido (bytes):",seq)
                         if binario==seq:
-                            print("RETRANSMISSÃO\n")
-                            channelComunication.enviaMsg(dest, canalUdp, dataSend)
-                        else:
                             print("proximo bloco\n")
                             ackAtual = ackAtual + 1
                             # proximo bloco
                             data = File.read(512)
-                estado = 5
+                        else:
+                            print("RETRANSMISSÃO\n")
+                            channelComunication.enviaMsg(dest, canalUdp, dataSend)
+
+
+            estado = 5
     if estado == 8:
         print("ERROR\n")
         msgErro = Cechahn.ERROR()
